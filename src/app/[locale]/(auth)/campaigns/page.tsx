@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import CampaignCard from './components/CampaignCard';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { AppPagination } from '@/components/Pagination';
 
 export default function CampaignPage() {
