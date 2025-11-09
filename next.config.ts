@@ -12,6 +12,9 @@ const baseConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
   reactCompiler: true,
+
+  output: 'export',
+
   outputFileTracingIncludes: {
     '/': ['./migrations/**/*'],
   },

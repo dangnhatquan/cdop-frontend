@@ -5,7 +5,6 @@
     "node": ">=20"
   },
   "scripts": {
-    "export": "next export",
     "dev:spotlight": "npx @spotlightjs/spotlight",
     "dev:next": "next dev",
     "dev": "run-p db-server:file dev:*",
