@@ -1,35 +1,80 @@
 "use client"
 
-import React, { useState } from 'react';
-import { ArrowLeft, QrCode } from 'lucide-react';
-
-interface Campaign {
-  title: string;
-  raised: number;
-  goal: number;
-  daysLeft: number;
-}
+import React, { useEffect, useState } from 'react';
+import { AlertCircle, ArrowLeft, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { ICampaign } from '@/models/campaign';
 
 const DonationPage: React.FC = () => {
   const [selectedAmount, setSelectedAmount] = useState<number>(50000);
   const [customAmount, setCustomAmount] = useState<string>('');
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
+  const [message, setMessage] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  
+  const params = useParams();
+  const router = useRouter();
+  const campaignId = params?.id;
 
   const presetAmounts: number[] = [10000, 50000, 100000, 200000];
 
-  const campaign: Campaign = {
-    title: "ĐNXH Thanh thiếu niên Việt Nam - VYSE",
-    raised: 438000,
-    goal: 200000000,
-    daysLeft: 75
+  const [campaign, setCampaign] = useState<ICampaign | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCampaign = async () => {
+      if (!campaignId) {
+        setError('Campaign ID is missing');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(`/api/campaigns/${campaignId}`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Không tìm thấy chiến dịch');
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data: ICampaign = await response.json();
+        setCampaign(data);
+      } catch (err) {
+        console.error('Error fetching campaign:', err);
+        setError(err instanceof Error ? err.message : 'Có lỗi xảy ra khi tải dữ liệu');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCampaign();
+  }, [campaignId]);
+
+  const formatCurrency = (amount: string | number) => {
+    const numAmount = typeof amount === 'string' ? parseFloat(amount) : amount;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      maximumFractionDigits: 0,
+    }).format(numAmount);
   };
 
-  const percentage: number = (campaign.raised / campaign.goal) * 100;
-
-  const formatCurrency = (amount: number): string => {
-    return new Intl.NumberFormat('vi-VN').format(amount);
-  };
+  const percentage: number = !campaign?.current_amount || !campaign?.goal_amount ? 0 : ((Number(campaign.current_amount) / Number(campaign.goal_amount)) * 100);
 
   const handleAmountClick = (amount: number): void => {
     setSelectedAmount(amount);
@@ -46,6 +91,93 @@ const DonationPage: React.FC = () => {
 
   const displayAmount: number = customAmount ? parseInt(customAmount) : selectedAmount;
 
+  const handleDonation = async () => {
+    if (!name.trim()) {
+      setSubmitError('Vui lòng nhập họ và tên');
+      return;
+    }
+    if (!email.trim()) {
+      setSubmitError('Vui lòng nhập địa chỉ email');
+      return;
+    }
+    if (!displayAmount || displayAmount <= 0) {
+      setSubmitError('Vui lòng nhập số tiền hợp lệ');
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setSubmitError(null);
+
+      const response = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: 1,
+          campaign_id: Number(campaignId),
+          amount: displayAmount,
+          message: message.trim() || `Ủng hộ từ ${name}`,
+          timestamp: new Date().toISOString(),
+          status: "new",
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('Transaction created:', data);
+
+      // Navigate to success page
+      router.push(`/campaigns/${campaignId}/donate/success?amount=${displayAmount}&campaign=${encodeURIComponent(campaign?.title || '')}`);
+
+    } catch (err) {
+      console.error('Error creating transaction:', err);
+      setSubmitError(err instanceof Error ? err.message : 'Có lỗi xảy ra khi xử lý giao dịch');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-12 h-12 animate-spin text-blue-600 mx-auto mb-4" />
+          <p className="text-gray-600">Đang tải chiến dịch...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !campaign) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-4">
+          <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">
+            Không thể tải chiến dịch
+          </h2>
+          <p className="text-gray-600 mb-4">{error || 'Đã xảy ra lỗi'}</p>
+          <div className="flex gap-3 justify-center">
+            <Button onClick={() => window.location.reload()}>
+              Thử lại
+            </Button>
+            <Link href="/campaigns">
+              <Button variant="outline">
+                Về trang chủ
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b sticky top-0 z-10">
@@ -53,6 +185,7 @@ const DonationPage: React.FC = () => {
           <button 
             className="p-2 -ml-2 hover:bg-gray-100 rounded-lg"
             aria-label="Quay lại"
+            onClick={() => window.history.back()}
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
@@ -61,6 +194,16 @@ const DonationPage: React.FC = () => {
       </div>
 
       <div className="max-w-md mx-auto px-4 py-6">
+        {submitError && (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4 mb-4 flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+            <div>
+              <p className="text-sm text-red-800 font-medium">Lỗi</p>
+              <p className="text-sm text-red-600">{submitError}</p>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded-2xl p-6 shadow-sm mb-4">
           <h2 className="text-center text-gray-700 font-medium mb-3">
             Số tiền bạn muốn ủng hộ
@@ -68,22 +211,22 @@ const DonationPage: React.FC = () => {
           
           <div className="text-center mb-6">
             <div className="text-4xl font-bold text-green-500">
-              {formatCurrency(displayAmount)} ₫
+              {formatCurrency(displayAmount)}
             </div>
           </div>
 
-          <div className="flex gap-2 mb-6">
+          <div className="grid grid-cols-2 gap-2 mb-6">
             {presetAmounts.map((amount: number) => (
               <button
                 key={amount}
                 onClick={() => handleAmountClick(amount)}
-                className={`flex-1 py-2.5 px-3 rounded-full text-sm font-medium transition-all ${
+                className={`py-2.5 px-3 rounded-full text-sm font-medium transition-all ${
                   selectedAmount === amount && !customAmount
                     ? 'bg-green-500 text-white shadow-md'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                 }`}
               >
-                {formatCurrency(amount)} ₫
+                {formatCurrency(amount)}
               </button>
             ))}
           </div>
@@ -102,16 +245,26 @@ const DonationPage: React.FC = () => {
             type="text"
             value={name}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-            placeholder="Nhập họ và tên"
+            placeholder="Nhập họ và tên *"
             className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4"
+            required
           />
           
           <input
             type="email"
             value={email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-            placeholder="Nhập địa chỉ email"
-            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            placeholder="Nhập địa chỉ email *"
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent mb-4"
+            required
+          />
+
+          <textarea
+            value={message}
+            onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setMessage(e.target.value)}
+            placeholder="Lời nhắn của bạn (không bắt buộc)"
+            rows={3}
+            className="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent resize-none"
           />
           
           <p className="text-xs text-gray-500 mt-3 leading-relaxed">
@@ -132,7 +285,7 @@ const DonationPage: React.FC = () => {
                 {campaign.title}
               </h3>
               <span className="inline-block bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded font-medium">
-                Còn {campaign.daysLeft} Ngày
+                Ngày kết thúc: {new Date(campaign.end_date).toLocaleDateString('vi-VN')}
               </span>
             </div>
           </div>
@@ -140,10 +293,10 @@ const DonationPage: React.FC = () => {
           <div className="mb-3">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-semibold text-gray-900">
-                {formatCurrency(campaign.raised)}₫
+                {formatCurrency(campaign.current_amount)}
               </span>
               <span className="text-xs text-gray-500">
-                / {formatCurrency(campaign.goal)}₫
+                / {formatCurrency(campaign.goal_amount)}
               </span>
               <span className="text-sm font-semibold text-green-600">
                 {percentage.toFixed(0)}%
@@ -160,18 +313,21 @@ const DonationPage: React.FC = () => {
         </div>
 
         <div className="flex gap-3">
-          <button 
-            className="w-16 h-14 bg-green-500 hover:bg-green-600 rounded-2xl flex items-center justify-center text-white transition-colors shadow-sm"
-            aria-label="Hiển thị QR Code"
+          <Button 
+            onClick={handleDonation}
+            disabled={isSubmitting}
+            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            <QrCode className="w-6 h-6" />
-          </button>
-          
-          <button className="flex-1 h-14 bg-gradient-to-r from-blue-600 to-green-500 hover:from-blue-700 hover:to-green-600 text-white font-semibold rounded-2xl transition-all shadow-sm">
-            Ủng hộ
-          </button>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Đang xử lý...
+              </>
+            ) : (
+              'Ủng hộ'
+            )}
+          </Button>
         </div>
-
         <div className="h-8" />
       </div>
     </div>

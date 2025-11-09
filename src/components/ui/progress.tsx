@@ -10,7 +10,7 @@ export const Progress = React.forwardRef<
     value?: number
   }
 >(({ className, value = 0, ...props }, ref) => {
-  const progress = Math.min(Math.max(value, 0), 100) // clamp 0–100
+  const progress = Math.min(Math.max(value, 0), 100)
 
   return (
     <ProgressPrimitive.Root
