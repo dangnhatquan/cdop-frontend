@@ -1,7 +1,6 @@
 import { DevtoolsProvider } from "@providers/devtools";
 import { RefineKbarProvider } from "@refinedev/kbar";
 
-import type { Viewport } from "next";
 import { cookies } from "next/headers";
 import React, { Suspense } from "react";
 
@@ -21,10 +20,6 @@ import Loading from "./loading";
 const PixelTracker = dynamic(() => import("@components/pixelTracker"), {
   ssr: false,
 });
-
-export const viewport: Viewport = {
-  themeColor: "#EFE8DD",
-};
 
 export default async function RootLayout({
   children,
