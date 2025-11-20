@@ -1,7 +1,7 @@
 import { DevtoolsProvider } from "@providers/devtools";
 import { RefineKbarProvider } from "@refinedev/kbar";
 
-import type { Metadata, Viewport } from "next";
+import type { Viewport } from "next";
 import { cookies } from "next/headers";
 import React, { Suspense } from "react";
 
@@ -9,19 +9,13 @@ import { ColorModeContextProvider } from "@contexts/color-mode";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@refinedev/antd/dist/reset.css";
 import { RefineContext } from "./_refine_context";
-
 import "@tailwind.css";
 import "@App.css";
 import "aos/dist/aos.css";
 import "animate.css";
 import { getContact } from "@api/contact";
 import { TLocale } from "@models/common";
-import Head from "next/head";
-import { keywords } from "@utils/constants";
-import Script from "next/script";
-
 import dynamic from "next/dynamic";
-import { PIXEL_ID } from "@api";
 import Loading from "./loading";
 
 const PixelTracker = dynamic(() => import("@components/pixelTracker"), {

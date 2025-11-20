@@ -2,8 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Thin */
 @font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/SVN-Gilroy Medium.otf") format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* @font-face {
+  font-family: "Gilroy";
+  src: url("/fonts/SVN-Gilroy Regular.otf") format("opentype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+} */
+
+/* @font-face {
   font-family: "Gilroy";
   src: url("/fonts/SVN-Gilroy Thin.otf") format("opentype");
   font-weight: 100;
@@ -19,7 +34,6 @@
   font-display: swap;
 }
 
-/* XLight */
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/SVN-Gilroy Xlight.otf") format("opentype");
@@ -36,7 +50,6 @@
   font-display: swap;
 }
 
-/* Light */
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/SVN-Gilroy Light.otf") format("opentype");
@@ -53,16 +66,7 @@
   font-display: swap;
 }
 
-/* Regular */
-@font-face {
-  font-family: "Gilroy";
-  src: url("/fonts/SVN-Gilroy Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
-/* Medium */
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/SVN-Gilroy Medium.otf") format("opentype");
@@ -79,7 +83,6 @@
   font-display: swap;
 }
 
-/* SemiBold */
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/SVN-Gilroy SemiBold.otf") format("opentype");
@@ -96,7 +99,6 @@
   font-display: swap;
 }
 
-/* Bold / XBold */
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/SVN-Gilroy XBold.otf") format("opentype");
@@ -113,7 +115,6 @@
   font-display: swap;
 }
 
-/* Heavy */
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/SVN-Gilroy Heavy.otf") format("opentype");
@@ -122,22 +123,13 @@
   font-display: swap;
 }
 
-/* Italic (General Italic = Regular Italic nếu file có) */
 @font-face {
   font-family: "Gilroy";
   src: url("/fonts/SVN-Gilroy Italic.otf") format("opentype");
   font-weight: 400;
   font-style: italic;
   font-display: swap;
-}
-
-@font-face {
-  font-family: "Inter";
-  src: url(/fonts/Inter-VariableFont_opsz,wght.ttf) format("truetype");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+} */
 
 body {
   font-family: "Gilroy";

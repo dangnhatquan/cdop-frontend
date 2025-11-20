@@ -1,0 +1,7 @@
+.ant-drawer-header-title {
+  flex-direction: row-reverse;
+}
+
+.ant-drawer-close {
+  color: black !important; /* đổi thành màu bạn muốn */
+}

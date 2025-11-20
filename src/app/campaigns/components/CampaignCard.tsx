@@ -1,7 +1,9 @@
 "use client";
 
+import { Organization } from "@models/charity";
 import { IMAGE_FALLBACK } from "@utils/constants";
 import { calculateProgress, daysLeft, formatCurrency } from "@utils/helpers";
+import { CAMPAIGN_DETAIL } from "@utils/path";
 import {
   Avatar,
   Button,
@@ -13,12 +15,19 @@ import {
   Typography,
   Image,
 } from "antd";
+import Link from "next/link";
+import urlcat from "urlcat";
 
 const { Title, Text, Paragraph } = Typography;
 
-const CampaignCard: React.FC<{ item: any }> = ({ item }) => {
+const CampaignCard: React.FC<{ item: any; organization?: Organization }> = ({
+  item,
+  organization,
+}) => {
   const progress = calculateProgress(item.current_amount, item.goal_amount);
   const left = daysLeft(item.end_date);
+
+  const goal = Math.round(parseFloat(item.goal_amount));
 
   return (
     <div className="w-full rounded-xl overflow-hidden shadow-md">
@@ -45,13 +54,13 @@ const CampaignCard: React.FC<{ item: any }> = ({ item }) => {
             <div className="flex flex-row items-center gap-2">
               <Avatar
                 size={36}
-                src={undefined}
+                src={organization?.logo_url}
                 className="bg-blue-50 text-blue-600 font-semibold"
               >
-                {String(item.org_id || "O").charAt(0)}
+                {String(organization?.name || "O").charAt(0)}
               </Avatar>
               <Text strong className="block">
-                {`Tổ chức ${item.org_id ?? ""}`}
+                {organization?.name}
               </Text>
             </div>
             <div>
@@ -70,7 +79,7 @@ const CampaignCard: React.FC<{ item: any }> = ({ item }) => {
                   {formatCurrency(item.current_amount)}
                 </Text>
                 <Text type="secondary" className="block">
-                  / {formatCurrency(item.goal_amount)}
+                  / {formatCurrency(goal)}
                 </Text>
               </div>
               <Text strong className="block mt-1">
@@ -84,9 +93,11 @@ const CampaignCard: React.FC<{ item: any }> = ({ item }) => {
             />
           </div>
 
-          <button className="h-12 rounded-xl w-full bg-gradient-to-r from-[#004AAD] to-[#00A499] text-white hover:from-[#0056C1] hover:to-[#00B86B] active:scale-[0.98]">
-            Quyên góp
-          </button>
+          <Link href={urlcat(CAMPAIGN_DETAIL, { id: item.id })}>
+            <button className="h-12 rounded-xl w-full bg-gradient-to-r from-[#004AAD] to-[#00A499] text-white hover:from-[#0056C1] hover:to-[#00B86B] active:scale-[0.98]">
+              Quyên góp
+            </button>
+          </Link>
         </div>
       </div>
     </div>

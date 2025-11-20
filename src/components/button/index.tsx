@@ -22,9 +22,9 @@ export const Button: FC<IButtonProps> = ({
 }) => {
   const classes = classNames("font-gilroy", {
     "w-full": isFullWidth,
-    "font-bold text-[18px] text-white bg-[#686354] px-4 py-4 mobile:px-2 mobile:py-2":
+    "text-[18px] text-white bg-[#686354] px-4 py-4 mobile:px-2 mobile:py-2":
       type === "primary",
-    "font-bold text-[18px] text-stone bg-white px-4 py-4 mobile:px-2 mobile:py-2":
+    "text-[18px] text-stone bg-white px-4 py-4 mobile:px-2 mobile:py-2":
       type === "default",
     "border border-stone": bordered,
     "!text-[12px]": size === "small",

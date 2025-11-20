@@ -28,6 +28,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "cross-env": "^7.0.3",
+    "dayjs": "^1.11.19",
     "embla-carousel": "^8.5.1",
     "embla-carousel-autoplay": "^8.5.1",
     "embla-carousel-class-names": "^8.5.1",
@@ -54,7 +55,8 @@
     "sharp": "^0.33.5",
     "swiper": "^11.1.15",
     "tailwind-merge": "^2.6.0",
-    "urlcat": "^1.0.1"
+    "urlcat": "^1.0.1",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.4.0-alpha.2",

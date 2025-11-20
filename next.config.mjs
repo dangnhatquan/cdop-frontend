@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 
-const NEXT_PUBLIC_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const NEXT_PUBLIC_API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const nextConfig = {
   transpilePackages: ["@refinedev/antd"],
 
   images: {
-    domains: [NEXT_PUBLIC_BASE_URL],
+    domains: [NEXT_PUBLIC_API_BASE_URL],
     dangerouslyAllowSVG: true,
     formats: ["image/avif", "image/webp"],
     minimumCacheTTL: 31536000,
@@ -26,7 +26,7 @@ const nextConfig = {
     return [
       {
         source: "/api/:path*",
-        destination: `${NEXT_PUBLIC_BASE_URL}/:path*`,
+        destination: `${NEXT_PUBLIC_API_BASE_URL}/:path*`,
       },
     ];
   },
@@ -35,17 +35,7 @@ const nextConfig = {
     return [
       {
         source: "/",
-        destination: "/campaigns",
-        permanent: false,
-      },
-      {
-        source: "/exploration/en",
-        destination: "/exploration",
-        permanent: false,
-      },
-      {
-        source: "/exploration/vi",
-        destination: "/exploration",
+        destination: "/home",
         permanent: false,
       },
     ];

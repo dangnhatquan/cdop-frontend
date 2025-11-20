@@ -365,7 +365,7 @@ export const SliderProgress = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "  bg-gray-500 relative rounded-md h-2 justify-end items-center w-96 max-w-[90%] overflow-hidden",
+        "  0 relative rounded-md h-2 justify-end items-center w-96 max-w-[90%] overflow-hidden",
         className
       )}
     >
@@ -426,7 +426,7 @@ export const SliderDotButton = ({
             onClick={() => onDotButtonClick(index)}
             className={`relative inline-flex  p-0 m-0 w-2 h-2 `}
           >
-            <div className=" bg-gray-500/40  h-2 rounded-full w-10 "></div>
+            <div className=" 0/40  h-2 rounded-full w-10 "></div>
             {index === selectedIndex && (
               <AnimatePresence mode="wait">
                 <motion.div

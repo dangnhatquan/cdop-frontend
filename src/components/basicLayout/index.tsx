@@ -2,14 +2,12 @@ import { useTranslation } from "@refinedev/core";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, type FC } from "react";
 import Cookies from "js-cookie";
-import { IContact } from "@models/common";
 
 interface IBasicLayout {
   children: any;
-  contact?: IContact;
 }
 
-export const BasicLayout: FC<IBasicLayout> = ({ children, contact }) => {
+export const BasicLayout: FC<IBasicLayout> = ({ children }) => {
   const { changeLocale } = useTranslation();
 
   const params = useParams<{ lang: string }>();

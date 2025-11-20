@@ -53,12 +53,11 @@ export const RefineContext = ({
           { name: "transactions" },
         ]}
         options={{
-          syncWithLocation: true,
           warnWhenUnsavedChanges: true,
           useNewQueryKeys: true,
         }}
       >
-        <BasicLayout contact={contact}>{children}</BasicLayout>
+        <BasicLayout>{children}</BasicLayout>
         <RefineKbar />
       </Refine>
     </>
