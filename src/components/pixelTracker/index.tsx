@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { PIXEL_ID } from "@api";
 import { useEffect } from "react";
