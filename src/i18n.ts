@@ -20,7 +20,7 @@ i18n
   )
   .init({
     supportedLngs: SUPPORTED_LANGUAGES,
-    ns: ["common", "home", "menu", "gallery"],
+    ns: ["charity"],
     defaultNS: "common",
     fallbackLng: ["vi"],
     detection: {
