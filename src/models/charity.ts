@@ -18,7 +18,7 @@ export interface Organization {
   category: string;
   description: string;
   contact_email: string;
-  created_at: string; // hoặc Date nếu bạn parse
+  created_at: string;
   logo_url?: string;
   rating?: number;
   vote_count?: number;
@@ -28,8 +28,15 @@ export interface Organization {
 export interface User {
   id: number;
   name: string;
+  email: string;
   avatar_url: string;
   created_at: string | null;
   updated_at: string | null;
   deleted_at: string | null;
+}
+
+export interface IAccount {
+  phoneNumber: string;
+  name: string;
+  avatar: string;
 }

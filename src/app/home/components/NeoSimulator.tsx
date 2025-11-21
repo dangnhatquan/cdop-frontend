@@ -5,9 +5,14 @@ import { Home, Wallet, Gift, Menu } from "lucide-react";
 import Link from "next/link";
 import { useWalletStore } from "@utils/hooks/useWallet";
 import { formatCurrency } from "@utils/helpers";
+import { useGetIdentity } from "@refinedev/core";
+import { Avatar } from "antd";
+import { IAccount, User } from "@models/charity";
 
 export default function NeoSimulator() {
   const { balance } = useWalletStore();
+
+  const { data: user, isFetching } = useGetIdentity<User>();
 
   return (
     <div className="min-h-screen w-screen">
@@ -15,9 +20,13 @@ export default function NeoSimulator() {
         <div className="w-full max-w-[1280px] px-4 pt-10 pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="bg-white text-green-600 w-10 h-10 rounded-full flex items-center justify-center font-bold">
-                NT
-              </div>
+              <Avatar
+                size={36}
+                src={user?.avatar_url}
+                className="bg-blue-50 text-blue-600 font-semibold"
+              >
+                {String(user?.name || "U").charAt(0)}
+              </Avatar>
               <div>
                 <p className="text-sm opacity-80">Tài khoản chính</p>
                 <p className="font-semibold">{formatCurrency(balance)}</p>

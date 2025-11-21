@@ -154,8 +154,6 @@ const Carousel: React.FC<CarouselProps> = ({
   }, [emblaApi, onScroll]);
   const { selectedSnap, snapCount } = useSelectedSnapDisplay(emblaApi);
 
-  // for scale animation
-
   const tweenFactor = useRef(0);
   const tweenNodes = useRef<HTMLElement[]>([]);
   const setTweenNodes = useCallback(
@@ -298,7 +296,6 @@ export const Slider: React.FC<SliderProps> = ({
 
   const addImgToSlider = useCallback(() => {
     setSlidesArr((prev: any) => {
-      // Prevent adding duplicate images
       return [...prev, thumnailSrc];
     });
   }, [setSlidesArr, thumnailSrc]);

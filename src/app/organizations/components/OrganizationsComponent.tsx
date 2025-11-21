@@ -187,7 +187,6 @@ export const OrganizationsComponent = () => {
                 <div
                   key={org.id}
                   className="p-4 border border-gray-200 rounded-lg"
-                  onClick={() => console.log("Navigate to org detail", org.id)}
                 >
                   <div className="flex flex-row justify-between items-start">
                     <div className="flex items-center gap-4 mb-4">

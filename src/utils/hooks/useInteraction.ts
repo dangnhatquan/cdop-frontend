@@ -1,5 +1,6 @@
-import { useCustomMutation } from "@refinedev/core";
+import { useCustomMutation, useGetIdentity } from "@refinedev/core";
 import { EActionType, ETargetType } from "../../models/interaction";
+import { User } from "@models/charity";
 
 export interface IInteractionPayload {
   targetType: ETargetType;
@@ -10,6 +11,7 @@ export interface IInteractionPayload {
 
 export const useInteraction = () => {
   const { mutate, isLoading } = useCustomMutation<any>();
+  const { data: user } = useGetIdentity<User>();
 
   const interact = (payload: IInteractionPayload) => {
     mutate({
@@ -19,7 +21,7 @@ export const useInteraction = () => {
         target_type: payload.targetType,
         target_id: payload.targetId,
         action_type: payload.action,
-        user_id: 1,
+        user_id: user?.id,
       },
     });
   };

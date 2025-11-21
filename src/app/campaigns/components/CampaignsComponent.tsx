@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useCustom, useList } from "@refinedev/core";
-import { API_CAMPAIGNS_RECOMMENDATION } from "@utils/api-routes";
+import { useCustom, useGetIdentity, useList } from "@refinedev/core";
+import { API_CAMPAIGNS, API_CAMPAIGNS_RECOMMENDATION } from "@utils/api-routes";
 
 import { Empty, Typography, Pagination } from "antd";
 
@@ -10,7 +10,7 @@ import urlcat from "urlcat";
 import CampaignCard from "./CampaignCard";
 import SearchBar from "./SearchBar";
 import Loading from "@components/loading";
-import { Organization } from "@models/charity";
+import { Organization, User } from "@models/charity";
 import { useDebounce } from "ahooks";
 
 const { Title } = Typography;
@@ -22,10 +22,12 @@ export const CampaignsComponent = () => {
   const [page, setPage] = useState(1);
   const pageSize = 6;
 
+  const { data: user } = useGetIdentity<User>();
+
   const { data, isLoading, isError, error, refetch } = useCustom({
-    url: urlcat(API_CAMPAIGNS_RECOMMENDATION, {
-      user_id: 1,
-      k: 100,
+    url: urlcat(API_CAMPAIGNS, {
+      user_id: user?.id,
+      k: 500,
       q: debouncedValue || undefined,
     }),
     method: "get",
@@ -35,7 +37,8 @@ export const CampaignsComponent = () => {
     },
   });
 
-  const recommendations = data?.data?.recommendations ?? [];
+  // const recommendations = data?.data?.recommendations ?? [];
+  const recommendations = data?.data ?? [];
   const total = data?.data?.total ?? 0;
 
   const onSearchChange = (value: string) => {

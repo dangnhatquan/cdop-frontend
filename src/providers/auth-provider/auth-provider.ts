@@ -5,29 +5,59 @@ import Cookies from "js-cookie";
 
 const mockUsers = [
   {
-    email: "admin@refine.dev",
-    name: "John Doe",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    roles: ["admin"],
-  },
-  {
-    email: "editor@refine.dev",
-    name: "Jane Doe",
-    avatar: "https://i.pravatar.cc/150?img=1",
-    roles: ["editor"],
-  },
-  {
-    email: "demo@refine.dev",
-    name: "Jane Doe",
-    avatar: "https://i.pravatar.cc/150?img=1",
+    phoneNumber: "0778812024",
+    name: "Đặng Nhật Quân",
+    email: "dnquan@veritastvn.com",
+    avatar_url: "https://i.pravatar.cc/150?img=1",
     roles: ["user"],
+    id: 1,
+
+    created_at: "2025-11-06 02:20:51",
+    updated_at: "2025-11-21 16:39:28",
+    deleted_at: null,
+  },
+  {
+    phoneNumber: "0975173018",
+    name: "Vũ Nhất Khang",
+    email: "vnkhang@veritastvn.com",
+    avatar_url: "https://i.pravatar.cc/150?img=1",
+    roles: ["user"],
+    id: 4,
+
+    created_at: "2025-11-06 02:20:51",
+    updated_at: "2025-11-21 16:39:28",
+    deleted_at: null,
+  },
+  {
+    name: "Hoàng Kỳ Anh",
+    phoneNumber: "0343557272",
+    email: "hkanh@veritastvn.com",
+    avatar_url: "https://i.pravatar.cc/150?img=1",
+    roles: ["user"],
+    id: 2,
+
+    created_at: "2025-11-06 02:20:51",
+    updated_at: "2025-11-21 16:39:28",
+    deleted_at: null,
+  },
+  {
+    name: "Bùi Thị Hoàng Giang",
+    phoneNumber: "0971241268",
+    email: "bthgiang@veritastvn.com",
+    avatar_url: "https://i.pravatar.cc/150?img=1",
+    roles: ["user"],
+    id: 3,
+
+    created_at: "2025-11-06 02:20:51",
+    updated_at: "2025-11-21 16:39:28",
+    deleted_at: null,
   },
 ];
 
 export const authProvider: AuthBindings = {
-  login: async ({ email, username, password, remember }) => {
+  login: async ({ phoneNumber, username, password, remember }) => {
     // Suppose we actually send a request to the back end here.
-    const user = mockUsers.find((item) => item.email === email);
+    const user = mockUsers.find((item) => item.phoneNumber === phoneNumber);
 
     if (user) {
       Cookies.set("auth", JSON.stringify(user), {
@@ -36,7 +66,7 @@ export const authProvider: AuthBindings = {
       });
       return {
         success: true,
-        redirectTo: "/",
+        redirectTo: "/home",
       };
     }
 
@@ -49,7 +79,9 @@ export const authProvider: AuthBindings = {
     };
   },
   register: async (params) => {
-    const user = mockUsers.find((item) => item.email === params.email);
+    const user = mockUsers.find(
+      (item) => item.phoneNumber === params.phoneNumber
+    );
 
     if (user) {
       Cookies.set("auth", JSON.stringify(user), {
@@ -70,7 +102,9 @@ export const authProvider: AuthBindings = {
     };
   },
   forgotPassword: async (params) => {
-    const user = mockUsers.find((item) => item.email === params.email);
+    const user = mockUsers.find(
+      (item) => item.phoneNumber === params.phoneNumber
+    );
 
     if (user) {
       return {

@@ -1,6 +1,5 @@
-import { BlocksContent } from '@strapi/blocks-react-renderer';
-import { Block, ICustomImage, IImage } from './common';
-
+import { BlocksContent } from "@strapi/blocks-react-renderer";
+import { Block, ICustomImage, IImage } from "./common";
 
 export interface IHero {
   id: number;
@@ -16,9 +15,8 @@ export interface IIntroduction {
   lowerImage: IImage;
 }
 
-
 export interface ISpace {
-  id: number; // ID for the "Our ISpace" section
+  id: number;
   upperImage: IImage;
   lowerImage: IImage;
 }

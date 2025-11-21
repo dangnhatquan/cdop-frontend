@@ -22,7 +22,7 @@ module.exports = {
       screens: {
         mobile: { max: `${SCREEN_SIZE.MOBILE_MAX}px` },
       },
-    }, // giữ nguyên mặc định, chưa tùy chỉnh gì
+    },
   },
   plugins: [require("@tailwindcss/line-clamp")],
 };

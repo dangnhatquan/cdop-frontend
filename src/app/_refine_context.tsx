@@ -11,6 +11,7 @@ import { useNotificationProvider } from "@refinedev/antd";
 
 import "@i18n";
 import { IContact } from "@models/common";
+import { authProvider } from "@providers/auth-provider";
 
 interface IRefineContext {
   contact?: IContact;
@@ -36,6 +37,7 @@ export const RefineContext = ({
     <>
       <Refine
         i18nProvider={i18nProvider}
+        authProvider={authProvider}
         routerProvider={routerProvider}
         dataProvider={coreDataProvider}
         notificationProvider={useNotificationProvider}

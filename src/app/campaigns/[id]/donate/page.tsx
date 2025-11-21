@@ -13,8 +13,8 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Avatar, Button, Progress } from "antd";
 import Loading from "@components/loading";
-import { BaseKey, useOne } from "@refinedev/core";
-import { Campaign, Organization } from "@models/charity";
+import { BaseKey, useGetIdentity, useOne } from "@refinedev/core";
+import { Campaign, Organization, User } from "@models/charity";
 import { isNil } from "lodash";
 import {
   formatCreatedDate,
@@ -35,6 +35,13 @@ const DonationPage: React.FC = () => {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const { donate } = useInteraction();
+
+  const { data: user } = useGetIdentity<User>();
+
+  useEffect(() => {
+    if (!isNil(user?.name)) setName(user?.name);
+    if (!isNil(user?.email)) setEmail(user?.email);
+  }, [user]);
 
   const router = useRouter();
   const params = useParams();
@@ -116,7 +123,7 @@ const DonationPage: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          user_id: 1,
+          user_id: user?.id,
           campaign_id: Number(campaignId),
           amount: displayAmount,
           message: message.trim() || `Ủng hộ từ ${name}`,
@@ -234,7 +241,8 @@ const DonationPage: React.FC = () => {
         <div className="bg-white rounded-2xl px-4 pb-4">
           <input
             type="text"
-            value={name}
+            value={user?.name}
+            disabled
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setName(e.target.value)
             }
@@ -245,7 +253,8 @@ const DonationPage: React.FC = () => {
 
           <input
             type="email"
-            value={email}
+            value={user?.email}
+            disabled
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setEmail(e.target.value)
             }

@@ -1,7 +1,7 @@
 "use client";
 
-import { Campaign } from "@models/charity";
-import { useTable } from "@refinedev/core";
+import { Campaign, User } from "@models/charity";
+import { useGetIdentity, useTable } from "@refinedev/core";
 import { EMPTY_STRING } from "@utils/constants";
 import { formatCurrency } from "@utils/helpers";
 import {
@@ -17,7 +17,6 @@ import {
 } from "antd";
 import { isNil } from "lodash";
 import {
-  User,
   Mail,
   Calendar,
   Edit,
@@ -25,27 +24,15 @@ import {
   TrendingUp,
   Award,
   Clock,
+  User2,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 const { Title, Text } = Typography;
 
-const mockUser = {
-  id: 1,
-  name: "Đặng Nhật Quân",
-  avatar_url:
-    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXZhdGFyfGVufDB8fDB8fHww",
-  email: "quan.dang@example.com",
-  created_at: "2025-11-06 02:20:51",
-  updated_at: "2025-11-21 16:39:28",
-  deleted_at: null,
-};
-
 export const TransactionsComponent = () => {
-  const loading = false;
-  const userData = mockUser;
-  // const transactions = mockTransactions;
+  const { data: user } = useGetIdentity<User>();
 
   const {
     tableQuery: { data: transactionsData, refetch, isFetching, isError },
@@ -56,7 +43,7 @@ export const TransactionsComponent = () => {
         {
           field: "user_id",
           operator: "eq",
-          value: 1,
+          value: user?.id,
         },
       ],
     },
@@ -139,7 +126,7 @@ export const TransactionsComponent = () => {
       key: "overview",
       label: (
         <span className="flex items-center gap-2">
-          <User className="w-4 h-4" />
+          <User2 className="w-4 h-4" />
           Tổng quan
         </span>
       ),
@@ -176,10 +163,10 @@ export const TransactionsComponent = () => {
           <div title="Thông tin cá nhân">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
-                <User className="w-5 h-5 text-gray-500" />
+                <User2 className="w-5 h-5 text-gray-500" />
                 <div>
                   <Text className="text-gray-500 text-sm block">Họ và tên</Text>
-                  <Text className="font-medium">{userData.name}</Text>
+                  <Text className="font-medium">{user?.name}</Text>
                 </div>
               </div>
 
@@ -190,7 +177,7 @@ export const TransactionsComponent = () => {
                 <div>
                   <Text className="text-gray-500 text-sm block">Email</Text>
                   <Text className="font-medium">
-                    {userData.email || "Chưa cập nhật"}
+                    {user?.email || "Chưa cập nhật"}
                   </Text>
                 </div>
               </div>
@@ -204,7 +191,9 @@ export const TransactionsComponent = () => {
                     Ngày tham gia
                   </Text>
                   <Text className="font-medium">
-                    {formatDate(userData.created_at)}
+                    {user?.created_at
+                      ? formatDate(user?.created_at)
+                      : EMPTY_STRING}
                   </Text>
                 </div>
               </div>
@@ -218,7 +207,9 @@ export const TransactionsComponent = () => {
                     Cập nhật lần cuối
                   </Text>
                   <Text className="font-medium">
-                    {formatDate(userData.updated_at)}
+                    {user?.updated_at
+                      ? formatDate(user?.updated_at)
+                      : EMPTY_STRING}
                   </Text>
                 </div>
               </div>
@@ -266,24 +257,25 @@ export const TransactionsComponent = () => {
           <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
             <Avatar
               size={120}
-              src={userData.avatar_url}
+              src={user?.avatar_url}
               className="border-4 border-white shadow-lg"
             >
-              {userData.name.charAt(0)}
+              {user?.name.charAt(0)}
             </Avatar>
 
             <div className="flex-grow text-center md:text-left">
               <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-2">
                 <div>
                   <Title level={2} className="mb-1">
-                    {userData.name}
+                    {user?.name}
                   </Title>
                   <Text className="text-gray-600">
                     Thành viên từ{" "}
-                    {new Date(userData.created_at).toLocaleDateString("vi-VN", {
-                      month: "long",
-                      year: "numeric",
-                    })}
+                    {user?.created_at &&
+                      new Date(user?.created_at).toLocaleDateString("vi-VN", {
+                        month: "long",
+                        year: "numeric",
+                      })}
                   </Text>
                 </div>
               </div>
