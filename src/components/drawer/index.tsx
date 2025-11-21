@@ -5,6 +5,7 @@ import { IContact } from "@models/common";
 import "./index.css";
 import { colors } from "../../../theme.config";
 import PrimaryLogo from "@components/icons/PrimaryLogo";
+import Link from "next/link";
 
 export const CustomDrawer = ({ contact }: { contact?: IContact }) => {
   const [open, setOpen] = useState(false);
@@ -32,6 +33,7 @@ export const CustomDrawer = ({ contact }: { contact?: IContact }) => {
       >
         <div className="w-full flex flex-col justify-start items-end gap-[24px]">
           <PrimaryLogo width={40} height={40} />
+          <Link href="/transactions">Lịch sử quyên góp</Link>
         </div>
       </Drawer>
     </>

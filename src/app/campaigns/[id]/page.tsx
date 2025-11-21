@@ -331,6 +331,7 @@ const CampaignDetailPage = () => {
                   </div>
                 ) : (
                   <Table
+                    size="small"
                     dataSource={transactions}
                     loading={isFetching}
                     rowKey="id"

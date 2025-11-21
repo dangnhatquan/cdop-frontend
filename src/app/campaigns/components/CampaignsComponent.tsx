@@ -4,16 +4,13 @@ import { useState } from "react";
 import { useCustom, useList } from "@refinedev/core";
 import { API_CAMPAIGNS_RECOMMENDATION } from "@utils/api-routes";
 
-import { Col, Empty, Row, Spin, Typography, Pagination, Input } from "antd";
+import { Empty, Typography, Pagination } from "antd";
 
 import urlcat from "urlcat";
 import CampaignCard from "./CampaignCard";
 import SearchBar from "./SearchBar";
 import Loading from "@components/loading";
 import { Organization } from "@models/charity";
-import { ArrowLeft, Heart, Share2 } from "lucide-react";
-import PrimaryLogo from "@components/icons/PrimaryLogo";
-import { CustomDrawer } from "@components/drawer";
 
 const { Title } = Typography;
 
