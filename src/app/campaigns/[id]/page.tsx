@@ -23,8 +23,8 @@ import {
 import { BaseKey, useOne, useTable } from "@refinedev/core";
 import { isEmpty, isNil } from "lodash";
 import dayjs from "dayjs";
-import { DateFormatter } from "@utils/constants";
-import { Campaign, Organization } from "@models/charity";
+import { DateFormatter, EMPTY_STRING } from "@utils/constants";
+import { Campaign, Organization, User } from "@models/charity";
 import { NEXT_PUBLIC_URL } from "@api";
 import { CopyToClipboard } from "@components/CopyToClipboardButton";
 import { useInteraction } from "@utils/hooks/useInteraction";
@@ -231,7 +231,7 @@ const CampaignDetailPage = () => {
             </div>
           </div>
 
-          {campaign.status === "active" && (
+          {campaign.status === "in_progress" && (
             <Link href={`/campaigns/${campaign.id}/donate`}>
               <button className="h-12 rounded-xl w-full bg-gradient-to-r from-[#004AAD] to-[#00A499] text-white hover:from-[#0056C1] hover:to-[#00B86B] active:scale-[0.98]">
                 Quyên góp
@@ -285,14 +285,6 @@ const CampaignDetailPage = () => {
             {activeTab === "detail" && (
               <div className="py-4 flex flex-col gap-2">
                 <div className="grid grid-cols-2 gap-4">
-                  {/* <div className="bg-green-100 rounded-xl p-4">
-                    <div className="text-sm text-gray-600 mb-1">Mục tiêu</div>
-                    <div className="text-xl font-bold text-green-600">{formatCurrency(goal)}</div>
-                  </div>
-                  <div className="bg-green-100 rounded-xl p-4">
-                    <div className="text-sm text-gray-600 mb-1">Đã quyên góp</div>
-                    <div className="text-xl font-bold text-green-600">{formatCurrency(raised)}</div>
-                  </div> */}
                   <div className="bg-green-100 rounded-xl p-4">
                     <div className="text-sm text-gray-600 mb-1">
                       Ngày bắt đầu
@@ -359,6 +351,10 @@ const CampaignDetailPage = () => {
                     dataSource={transactions}
                     loading={isFetching}
                     rowKey="id"
+                    pagination={{
+                      pageSize: 10,
+                      showTotal: (total) => `Tổng ${total} giao dịch`,
+                    }}
                     columns={[
                       {
                         title: "Ngày",
@@ -378,15 +374,25 @@ const CampaignDetailPage = () => {
                       },
                       {
                         title: "Người ủng hộ",
-                        dataIndex: "user_id",
-                        render: (userId: string) => {
-                          return <div>User {userId}</div>;
+                        dataIndex: "user",
+                        render: (user: User) => {
+                          return <div>{user.name}</div>;
                         },
                       },
                       {
                         title: "Số tiền",
                         dataIndex: "amount",
-                        render: (amt) => formatCurrency(parseFloat(amt)),
+                        render: (amount) => formatCurrency(parseFloat(amount)),
+                      },
+                      {
+                        title: "Hoá đơn",
+                        dataIndex: "receipt_url",
+                        render: (receipt_url: string) =>
+                          !isNil(receipt_url) ? (
+                            <Link href={receipt_url}>Xem thêm</Link>
+                          ) : (
+                            EMPTY_STRING
+                          ),
                       },
                     ]}
                   />

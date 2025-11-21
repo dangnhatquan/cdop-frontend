@@ -1,7 +1,10 @@
 "use client";
 
+import CampaignCard from "@app/campaigns/components/CampaignCard";
 import { Organization } from "@models/charity";
-import { BaseKey, useOne } from "@refinedev/core";
+import { BaseKey, useCustom, useOne } from "@refinedev/core";
+import { API_CAMPAIGNS } from "@utils/api-routes";
+import { categoryColors, categoryLabels } from "@utils/constants";
 import { useInteraction } from "@utils/hooks/useInteraction";
 import { Tag, Rate, Divider, Button, Spin, Empty } from "antd";
 import {
@@ -15,27 +18,16 @@ import {
 } from "lucide-react";
 import { useParams } from "next/navigation";
 import { useState } from "react";
-
-const categoryColors: Record<string, string> = {
-  health: "red",
-  education: "blue",
-  environment: "green",
-  social: "purple",
-  animal: "orange",
-};
-
-const categoryLabels: Record<string, string> = {
-  health: "Y tế",
-  education: "Giáo dục",
-  environment: "Môi trường",
-  other: "Lĩnh vực khác",
-};
+import urlcat from "urlcat";
 
 const OrganizationDetailPage = () => {
   const params = useParams();
   const orgId = params?.id as BaseKey;
 
   const [like, setLike] = useState(false);
+
+  const [page, setPage] = useState(1);
+  const pageSize = 6;
 
   const toggleLike = () => {
     setLike(!like);
@@ -52,6 +44,21 @@ const OrganizationDetailPage = () => {
   });
 
   const organization = organizationData?.data;
+
+  const { data, isLoading, isError, error, refetch } = useCustom({
+    url: urlcat(API_CAMPAIGNS, {
+      page,
+      limit: pageSize,
+      org_id: orgId,
+    }),
+    method: "get",
+    queryOptions: {
+      retry: false,
+      keepPreviousData: true,
+    },
+  });
+
+  const campaigns = data?.data ?? [];
 
   if (isFetching) {
     return (
@@ -81,10 +88,8 @@ const OrganizationDetailPage = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="w-full max-w-6xl mx-auto p-4 md:p-6 lg:p-8">
-        {/* Header Section */}
         <div className="mb-6 ">
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Logo */}
             <div className="flex-shrink-0">
               <img
                 src={organization.logo_url}
@@ -93,7 +98,6 @@ const OrganizationDetailPage = () => {
               />
             </div>
 
-            {/* Organization Info */}
             <div className="flex-grow">
               <div className="flex flex-wrap items-start justify-between gap-4 mb-3">
                 <div className="text-2xl md:text-3xl font-bold text-gray-900">
@@ -108,7 +112,6 @@ const OrganizationDetailPage = () => {
                 </div>
               </div>
 
-              {/* Action Buttons */}
               <div className="py-6 flex flex-wrap gap-4">
                 <button
                   className=" flex flex-row items-center gap-2"
@@ -128,7 +131,6 @@ const OrganizationDetailPage = () => {
                 </button>
               </div>
 
-              {/* Rating */}
               <div className="flex items-center gap-3 mb-4">
                 <Rate disabled defaultValue={organization.rating} allowHalf />
                 <span className="text-gray-600 flex flex-row items-center">
@@ -140,7 +142,6 @@ const OrganizationDetailPage = () => {
                 </span>
               </div>
 
-              {/* Contact Info */}
               <div className="flex flex-col gap-2">
                 {organization.website_url && (
                   <div className="flex items-center gap-2 text-gray-700">
@@ -175,7 +176,6 @@ const OrganizationDetailPage = () => {
           </div>
         </div>
 
-        {/* Stats Section */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div>
             <div className="flex items-center gap-4">
@@ -218,9 +218,8 @@ const OrganizationDetailPage = () => {
           </div>
         </div>
 
-        {/* Description Section */}
-        <div className="text-[16px]/5 mb-4 font-semibold">Giới thiệu</div>
-        <div>
+        <div className="text-[24px]/7 mb-4 font-semibold">Giới thiệu</div>
+        <div className="mb-4">
           <div className="prose max-w-none">
             {organization.description.split("\n\n").map((paragraph, index) => (
               <p
@@ -231,6 +230,29 @@ const OrganizationDetailPage = () => {
               </p>
             ))}
           </div>
+        </div>
+
+        <div className="w-full max-w-[1280px] flex flex-col gap-4">
+          <div className="text-[24px]/7 mb-4 font-semibold">Chiến dịch</div>
+          {isLoading ? (
+            <div className="min-h-screen flex items-center justify-center">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <div className="flex flex-col gap-4 w-full">
+              {campaigns.length === 0 ? (
+                <Empty description="Không có dữ án phù hợp" />
+              ) : (
+                campaigns.map((item: any, idx: number) => (
+                  <CampaignCard
+                    key={idx}
+                    item={item}
+                    organization={organization}
+                  />
+                ))
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

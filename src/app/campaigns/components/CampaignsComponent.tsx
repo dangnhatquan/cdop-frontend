@@ -11,20 +11,22 @@ import CampaignCard from "./CampaignCard";
 import SearchBar from "./SearchBar";
 import Loading from "@components/loading";
 import { Organization } from "@models/charity";
+import { useDebounce } from "ahooks";
 
 const { Title } = Typography;
 
 export const CampaignsComponent = () => {
-  const [search, setSearch] = useState("");
+  const [value, setValue] = useState<string>();
+  const debouncedValue = useDebounce(value, { wait: 500 });
+
   const [page, setPage] = useState(1);
   const pageSize = 6;
 
   const { data, isLoading, isError, error, refetch } = useCustom({
     url: urlcat(API_CAMPAIGNS_RECOMMENDATION, {
-      id: 1,
-      q: search || undefined,
-      page,
-      limit: pageSize,
+      user_id: 1,
+      k: 100,
+      q: debouncedValue || undefined,
     }),
     method: "get",
     queryOptions: {
@@ -36,14 +38,8 @@ export const CampaignsComponent = () => {
   const recommendations = data?.data?.recommendations ?? [];
   const total = data?.data?.total ?? 0;
 
-  // HANDLE SEARCH SUBMIT
-  const onSearchChange = (e: any) => {
-    setSearch(e.target.value);
-  };
-
-  const onSearchSubmit = () => {
-    setPage(1);
-    refetch();
+  const onSearchChange = (value: string) => {
+    setValue(value);
   };
 
   const { data: organizationData } = useList<Organization>({
@@ -71,17 +67,13 @@ export const CampaignsComponent = () => {
   return (
     <div className="min-h-screen ">
       <div className="p-4 w-full max-w-[1280px] flex flex-col gap-4">
-        <Title level={4}>Dự án dành cho bạn</Title>
-        <SearchBar
-          onChange={onSearchChange}
-          value={search}
-          onSubmit={onSearchSubmit}
-        />
+        <Title level={4}>Chiến dịch dành cho bạn</Title>
+        <SearchBar onChange={onSearchChange} value={value} />
         <div className="flex flex-col gap-4 w-full">
-          {recommendations.length === 0 ? (
+          {recommendations?.length === 0 ? (
             <Empty description="Không có dữ án phù hợp" />
           ) : (
-            recommendations.map((item: any, idx: number) => (
+            recommendations?.map((item: any, idx: number) => (
               <CampaignCard
                 key={idx}
                 item={item}

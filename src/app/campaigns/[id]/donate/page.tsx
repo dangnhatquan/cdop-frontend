@@ -135,7 +135,6 @@ const DonationPage: React.FC = () => {
       withdraw(displayAmount);
       donate(campaignId);
 
-      // Navigate to success page
       router.push(
         `/campaigns/${campaignId}/donate/success?amount=${displayAmount}&campaign=${encodeURIComponent(
           campaign?.title || ""
@@ -353,6 +352,12 @@ const DonationPage: React.FC = () => {
               </div>
             </div>
           )}
+        </div>
+        <div className="flex justify-end p-4">
+          <p className="text-sm text-gray-500">
+            Powered by <span className="font-semibold">Ethereum</span> · Sepolia
+            Testnet
+          </p>
         </div>
       </div>
     </div>

@@ -33,8 +33,14 @@ export const CustomDrawer = ({ contact }: { contact?: IContact }) => {
       >
         <div className="w-full flex flex-col justify-start items-end gap-[24px]">
           <PrimaryLogo width={60} height={60} />
-          <Link href="/transactions" className="text-[24px]/7">
-            Lịch sử quyên góp
+          <Link href="/profile" className="text-[24px]/7">
+            Profile
+          </Link>
+          <Link href="/organizations" className="text-[24px]/7">
+            Tổ chức gây quỹ
+          </Link>
+          <Link href="/campaigns" className="text-[24px]/7">
+            Chiến dịch
           </Link>
         </div>
       </Drawer>

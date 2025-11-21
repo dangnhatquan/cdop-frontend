@@ -24,3 +24,12 @@ export interface Organization {
   vote_count?: number;
   website_url?: string;
 }
+
+export interface User {
+  id: number;
+  name: string;
+  avatar_url: string;
+  created_at: string | null;
+  updated_at: string | null;
+  deleted_at: string | null;
+}

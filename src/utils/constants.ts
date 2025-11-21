@@ -44,3 +44,18 @@ export const DateFormatter = {
   WEEKDAY_DATE: "dddd, DD/MM/YYYY", // Sunday, 28/09/2025
   WEEKDAY_SHORT: "ddd, DD/MM", // Sun, 28/09
 };
+
+export const categoryColors: Record<string, string> = {
+  health: "red",
+  education: "blue",
+  environment: "green",
+  social: "purple",
+  animal: "orange",
+};
+
+export const categoryLabels: Record<string, string> = {
+  health: "Y tế",
+  education: "Giáo dục",
+  environment: "Môi trường",
+  other: "Lĩnh vực khác",
+};

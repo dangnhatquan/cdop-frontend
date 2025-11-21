@@ -104,7 +104,7 @@ const CampaignCard: React.FC<{ item: any; organization?: Organization }> = ({
           </div>
 
           <Link
-            href={urlcat(CAMPAIGN_DETAIL, { id: item.id })}
+            href={`/campaigns/${item.id}`}
             onClick={() => viewCampaign(item.id)}
           >
             <button className="h-12 rounded-xl w-full bg-gradient-to-r from-[#004AAD] to-[#00A499] text-white hover:from-[#0056C1] hover:to-[#00B86B] active:scale-[0.98]">
