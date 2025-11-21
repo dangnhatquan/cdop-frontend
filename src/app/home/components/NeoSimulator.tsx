@@ -11,7 +11,7 @@ export default function NeoSimulator() {
 
   return (
     <div className="min-h-screen w-screen">
-      <div className="min-h-screen bg-gradient-to-b from-green-700 to-green-500 text-white flex flex-col rounded-[2rem] overflow-hidden shadow-xl">
+      <div className="min-h-screen bg-gradient-to-b from-green-700 to-green-500 text-white flex flex-col overflow-hidden">
         <div className="w-full max-w-[1280px] px-4 pt-10 pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">

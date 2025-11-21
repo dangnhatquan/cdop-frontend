@@ -1,8 +1,13 @@
 import { Header } from "@components/header";
+import { Viewport } from "next";
 
 interface IBasicLayout {
   children: any;
 }
+
+export const viewport: Viewport = {
+  themeColor: "#000",
+};
 
 export default function Layout({ children }: IBasicLayout) {
   return (
