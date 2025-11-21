@@ -27,6 +27,7 @@ import { DateFormatter } from "@utils/constants";
 import { Campaign, Organization } from "@models/charity";
 import { NEXT_PUBLIC_URL } from "@api";
 import { CopyToClipboard } from "@components/CopyToClipboardButton";
+import { useInteraction } from "@utils/hooks/useInteraction";
 
 const CampaignDetailPage = () => {
   const params = useParams();
@@ -34,6 +35,13 @@ const CampaignDetailPage = () => {
 
   const [activeTab, setActiveTab] = useState("detail");
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [like, setLike] = useState(false);
+
+  const { voteCampaign, viewOrganization } = useInteraction();
+
+  const toggleLike = () => {
+    setLike(!like);
+  };
 
   const { data, isLoading, isError } = useOne<Campaign>({
     resource: "campaigns",
@@ -130,8 +138,18 @@ const CampaignDetailPage = () => {
               </div>
             </div>
             <div className="flex flex-row justify-end gap-4">
-              <button className="hover: rounded-lg transition">
-                <Heart className="w-4 h-4" />
+              <button
+                className="hover: rounded-lg transition"
+                onClick={() => {
+                  toggleLike();
+                  if (!like) voteCampaign(campaignId as string);
+                }}
+              >
+                {!like ? (
+                  <Heart className="w-4 h-4" />
+                ) : (
+                  <Heart className="w-4 h-4" fill="#e11d48" stroke="none" />
+                )}
               </button>
               <CopyToClipboard
                 text={`${NEXT_PUBLIC_URL}/campaigns/${campaign.id}`}
@@ -162,9 +180,15 @@ const CampaignDetailPage = () => {
             </Avatar>
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-sm">
+                <Link
+                  href={`/organizations/${orgId}`}
+                  className="font-semibold text-[16px]/5 !text-green-500"
+                  onClick={() => {
+                    if (!isNil(orgId)) viewOrganization(orgId.toString());
+                  }}
+                >
                   {organization?.name}
-                </span>
+                </Link>
               </div>
               <div
                 className={`w-fit text-xs px-2 py-0.5 rounded ${statusBadge?.class}`}

@@ -23,6 +23,7 @@ import {
 } from "@utils/helpers";
 import { useWalletStore } from "@utils/hooks/useWallet";
 import classNames from "classnames";
+import { useInteraction } from "@utils/hooks/useInteraction";
 
 const DonationPage: React.FC = () => {
   const [selectedAmount, setSelectedAmount] = useState<number>(50000);
@@ -33,9 +34,13 @@ const DonationPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
+  const { donate } = useInteraction();
+
   const router = useRouter();
   const params = useParams();
   const campaignId = params?.id as BaseKey;
+
+  const { viewOrganization } = useInteraction();
 
   const presetAmounts: number[] = [10000, 50000, 100000, 200000];
 
@@ -126,9 +131,9 @@ const DonationPage: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("Transaction created:", data);
 
       withdraw(displayAmount);
+      donate(campaignId);
 
       // Navigate to success page
       router.push(
@@ -189,7 +194,7 @@ const DonationPage: React.FC = () => {
 
           <div className="text-center mb-6">
             <div
-              className={classNames("text-4xl text-green-500", {
+              className={classNames("text-4xl text-green-5000", {
                 "text-red-500": isOverBudget,
               })}
             >
@@ -276,9 +281,16 @@ const DonationPage: React.FC = () => {
             </Avatar>
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2">
-                <span className="font-medium text-sm">
+                <Link
+                  href={`/organizations/${organization?.id}`}
+                  className="font-semibold text-[16px]/5 !text-green-500"
+                  onClick={() => {
+                    if (!isNil(organization?.id))
+                      viewOrganization(organization?.id);
+                  }}
+                >
                   {organization?.name}
-                </span>
+                </Link>
               </div>
               <div
                 className={`w-fit text-xs px-2 py-0.5 rounded ${statusBadge?.class}`}

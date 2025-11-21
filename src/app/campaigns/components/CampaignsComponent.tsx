@@ -22,7 +22,7 @@ export const CampaignsComponent = () => {
   const { data, isLoading, isError, error, refetch } = useCustom({
     url: urlcat(API_CAMPAIGNS_RECOMMENDATION, {
       id: 1,
-      search: search || undefined,
+      q: search || undefined,
       page,
       limit: pageSize,
     }),

@@ -3,6 +3,7 @@
 import { Organization } from "@models/charity";
 import { IMAGE_FALLBACK } from "@utils/constants";
 import { calculateProgress, daysLeft, formatCurrency } from "@utils/helpers";
+import { useInteraction } from "@utils/hooks/useInteraction";
 import { CAMPAIGN_DETAIL } from "@utils/path";
 import {
   Avatar,
@@ -15,6 +16,7 @@ import {
   Typography,
   Image,
 } from "antd";
+import { isNil } from "lodash";
 import Link from "next/link";
 import urlcat from "urlcat";
 
@@ -28,6 +30,7 @@ const CampaignCard: React.FC<{ item: any; organization?: Organization }> = ({
   const left = daysLeft(item.end_date);
 
   const goal = Math.round(parseFloat(item.goal_amount));
+  const { viewCampaign, viewOrganization } = useInteraction();
 
   return (
     <div className="w-full rounded-xl overflow-hidden shadow-md">
@@ -59,9 +62,16 @@ const CampaignCard: React.FC<{ item: any; organization?: Organization }> = ({
               >
                 {String(organization?.name || "O").charAt(0)}
               </Avatar>
-              <Text strong className="block">
+              <Link
+                href={`/organizations/${organization?.id}`}
+                className="font-semibold text-[16px]/5 !text-green-500"
+                onClick={() => {
+                  if (!isNil(organization?.id))
+                    viewOrganization(organization?.id);
+                }}
+              >
                 {organization?.name}
-              </Text>
+              </Link>
             </div>
             <div>
               {left !== null && (
@@ -93,7 +103,10 @@ const CampaignCard: React.FC<{ item: any; organization?: Organization }> = ({
             />
           </div>
 
-          <Link href={urlcat(CAMPAIGN_DETAIL, { id: item.id })}>
+          <Link
+            href={urlcat(CAMPAIGN_DETAIL, { id: item.id })}
+            onClick={() => viewCampaign(item.id)}
+          >
             <button className="h-12 rounded-xl w-full bg-gradient-to-r from-[#004AAD] to-[#00A499] text-white hover:from-[#0056C1] hover:to-[#00B86B] active:scale-[0.98]">
               Quyên góp
             </button>

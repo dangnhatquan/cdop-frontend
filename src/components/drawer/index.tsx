@@ -32,8 +32,10 @@ export const CustomDrawer = ({ contact }: { contact?: IContact }) => {
         onClose={toggleOpen}
       >
         <div className="w-full flex flex-col justify-start items-end gap-[24px]">
-          <PrimaryLogo width={40} height={40} />
-          <Link href="/transactions">Lịch sử quyên góp</Link>
+          <PrimaryLogo width={60} height={60} />
+          <Link href="/transactions" className="text-[24px]/7">
+            Lịch sử quyên góp
+          </Link>
         </div>
       </Drawer>
     </>
