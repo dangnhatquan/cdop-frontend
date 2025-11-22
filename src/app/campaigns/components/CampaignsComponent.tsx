@@ -12,6 +12,7 @@ import SearchBar from "./SearchBar";
 import Loading from "@components/loading";
 import { Organization, User } from "@models/charity";
 import { useDebounce } from "ahooks";
+import { Sparkles } from "lucide-react";
 
 const { Title } = Typography;
 
@@ -25,9 +26,11 @@ export const CampaignsComponent = () => {
   const { data: user } = useGetIdentity<User>();
 
   const { data, isLoading, isError, error, refetch } = useCustom({
-    url: urlcat(API_CAMPAIGNS, {
+    // url: urlcat(API_CAMPAIGNS, {
+    url: urlcat(API_CAMPAIGNS_RECOMMENDATION, {
       user_id: user?.id,
-      k: 500,
+      k: 10,
+      offset: 0,
       q: debouncedValue || undefined,
     }),
     method: "get",
@@ -37,8 +40,8 @@ export const CampaignsComponent = () => {
     },
   });
 
-  // const recommendations = data?.data?.recommendations ?? [];
-  const recommendations = data?.data ?? [];
+  const recommendations = data?.data?.recommendations ?? [];
+  // const recommendations = data?.data ?? [];
   const total = data?.data?.total ?? 0;
 
   const onSearchChange = (value: string) => {
@@ -70,7 +73,14 @@ export const CampaignsComponent = () => {
   return (
     <div className="min-h-screen ">
       <div className="p-4 w-full max-w-[1280px] flex flex-col gap-4">
-        <Title level={4}>Chiến dịch dành cho bạn</Title>
+        <div className="text-[30px]/8">Chiến dịch dành cho bạn</div>
+        <div className="flex justify-start">
+          <div className="flex flex-row justify-end items-center text-sm text-gray-500 gap-1">
+            Đề xuất bởi{" "}
+            <span className="font-semibold">AI cung cấp bởi AWS</span>{" "}
+            <Sparkles size={16} />
+          </div>
+        </div>
         <SearchBar onChange={onSearchChange} value={value} />
         <div className="flex flex-col gap-4 w-full">
           {recommendations?.length === 0 ? (

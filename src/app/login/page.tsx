@@ -68,7 +68,7 @@ export default function LoginPage() {
               <Input
                 size="large"
                 prefix={<Phone className="w-5 h-5 text-gray-400" />}
-                placeholder="Số điện thoại"
+                placeholder="VD: 0778812024"
               />
             </Form.Item>
 
@@ -79,7 +79,7 @@ export default function LoginPage() {
               <Input.Password
                 size="large"
                 prefix={<Lock className="w-5 h-5 text-gray-400" />}
-                placeholder="Mật khẩu"
+                placeholder="VD: bepiuthuong"
               />
             </Form.Item>
 
