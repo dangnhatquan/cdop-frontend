@@ -42,9 +42,9 @@ export default async function RootLayout({
           <AntdRegistry>
             <RefineKbarProvider>
               <ColorModeContextProvider defaultMode={theme?.value}>
-                <DevtoolsProvider>
-                  <RefineContext contact={contact}>{children}</RefineContext>
-                </DevtoolsProvider>
+                {/* <DevtoolsProvider> */}
+                <RefineContext contact={contact}>{children}</RefineContext>
+                {/* </DevtoolsProvider> */}
               </ColorModeContextProvider>
             </RefineKbarProvider>
           </AntdRegistry>

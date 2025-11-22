@@ -56,7 +56,7 @@ const DonationSuccessPage: React.FC = () => {
               Quay lại trang chủ
             </Button>
           </Link>
-          <Link href="/donations/history" className="block">
+          <Link href="/profile" className="block">
             <Button size="large" className="w-full">
               Xem hồ sơ của tôi
             </Button>
